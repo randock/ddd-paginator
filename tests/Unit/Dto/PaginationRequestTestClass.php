@@ -1,7 +1,8 @@
 <?php
 
-namespace Tests\Randock\DddPaginator\Unit\Dto;
+declare(strict_types=1);
 
+namespace Tests\Randock\DddPaginator\Unit\Dto;
 
 use Randock\DddPaginator\Dto\PaginationRequest;
 
@@ -9,9 +10,10 @@ class PaginationRequestTestClass extends PaginationRequest
 {
     /**
      * PaginationRequestTestClass constructor.
-     * @param array $criteria
-     * @param array $sort
-     * @param array $joins
+     *
+     * @param array    $criteria
+     * @param array    $sort
+     * @param array    $joins
      * @param int|null $limit
      * @param int|null $page
      */

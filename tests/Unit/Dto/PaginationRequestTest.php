@@ -1,22 +1,23 @@
 <?php
 
-namespace Tests\Randock\DddPaginator\Unit\Dto;
+declare(strict_types=1);
 
+namespace Tests\Randock\DddPaginator\Unit\Dto;
 
 use PHPUnit\Framework\TestCase;
 use Randock\DddPaginator\Dto\PaginationRequest;
 
 class PaginationRequestTest extends TestCase
 {
-    const PAGINATION_REQUEST_TEST_PAGE = 1;
+    public const PAGINATION_REQUEST_TEST_PAGE = 1;
 
-    const PAGINATION_REQUEST_TEST_LIMIT = 500;
+    public const PAGINATION_REQUEST_TEST_LIMIT = 500;
 
-    const PAGINATION_REQUEST_TEST_JOINS = [];
+    public const PAGINATION_REQUEST_TEST_JOINS = [];
 
-    const PAGINATION_REQUEST_TEST_SORT = [];
+    public const PAGINATION_REQUEST_TEST_SORT = [];
 
-    const PAGINATION_REQUEST_TEST_CRITERIA = [];
+    public const PAGINATION_REQUEST_TEST_CRITERIA = [];
 
     public function testGetters()
     {
