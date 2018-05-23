@@ -28,7 +28,6 @@ class PaginatedDataTransformer
     {
         $items = [];
         foreach ($pager->getCurrentPageResults() as $item) {
-            error_log(__FUNCTION__ . ' ' . __LINE__ . ' item => ' . var_export($item, true));
             $items[] = $this->dataTransformer->transform($item);
         }
 
