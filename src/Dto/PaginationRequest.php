@@ -20,11 +20,6 @@ abstract class PaginationRequest
     private $sort = [];
 
     /**
-     * @var array
-     */
-    private $joins = [];
-
-    /**
      * @var int
      */
     private $limit = self::LIMIT;
@@ -39,15 +34,13 @@ abstract class PaginationRequest
      *
      * @param array    $criteria
      * @param array    $sort
-     * @param array    $joins
      * @param int|null $limit
      * @param int|null $page
      */
-    public function __construct(array $criteria = [], array $sort = [], array $joins = [], int $limit = null, int $page = null)
+    public function __construct(array $criteria = [], array $sort = [], int $limit = null, int $page = null)
     {
         $this->criteria = $criteria;
         $this->sort = $sort;
-        $this->joins = $joins;
         $this->limit = $limit ?? self::LIMIT;
         $this->page = $page ?? self::PAGE;
     }
@@ -66,14 +59,6 @@ abstract class PaginationRequest
     public function getSort(): array
     {
         return $this->sort;
-    }
-
-    /**
-     * @return array
-     */
-    public function getJoins(): array
-    {
-        return $this->joins;
     }
 
     /**

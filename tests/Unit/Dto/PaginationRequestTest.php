@@ -13,11 +13,16 @@ class PaginationRequestTest extends TestCase
 
     public const PAGINATION_REQUEST_TEST_LIMIT = 500;
 
-    public const PAGINATION_REQUEST_TEST_JOINS = [];
+    public const PAGINATION_REQUEST_TEST_SORT = [
+        'item' => 'ASC',
+    ];
 
-    public const PAGINATION_REQUEST_TEST_SORT = [];
-
-    public const PAGINATION_REQUEST_TEST_CRITERIA = [];
+    public const PAGINATION_REQUEST_TEST_CRITERIA = [
+        'item' => [
+            'operator' => 'EQ',
+            'value' => 'value',
+        ],
+    ];
 
     public function testGetters()
     {
@@ -26,17 +31,23 @@ class PaginationRequestTest extends TestCase
         $this->assertInstanceOf(PaginationRequest::class, $paginationRequest);
         $this->assertSame(self::PAGINATION_REQUEST_TEST_CRITERIA, $paginationRequest->getCriteria());
         $this->assertSame(self::PAGINATION_REQUEST_TEST_SORT, $paginationRequest->getSort());
-        $this->assertSame(self::PAGINATION_REQUEST_TEST_JOINS, $paginationRequest->getJoins());
         $this->assertSame(self::PAGINATION_REQUEST_TEST_LIMIT, $paginationRequest->getLimit());
         $this->assertSame(self::PAGINATION_REQUEST_TEST_PAGE, $paginationRequest->getPage());
     }
 
-    public static function newPaginationRequest(array $criteria = null, array $sort = null, array $joins = null, int $limit = null, int $page = null): PaginationRequestTestClass
+    /**
+     * @param array|null $criteria
+     * @param array|null $sort
+     * @param int|null   $limit
+     * @param int|null   $page
+     *
+     * @return PaginationRequestTestClass
+     */
+    public static function newPaginationRequest(array $criteria = null, array $sort = null, int $limit = null, int $page = null): PaginationRequestTestClass
     {
         return new PaginationRequestTestClass(
             $criteria ?? self::PAGINATION_REQUEST_TEST_CRITERIA,
             $sort ?? self::PAGINATION_REQUEST_TEST_SORT,
-            $joins ?? self::PAGINATION_REQUEST_TEST_JOINS,
             $limit ?? self::PAGINATION_REQUEST_TEST_LIMIT,
             $page ?? self::PAGINATION_REQUEST_TEST_PAGE
         );
