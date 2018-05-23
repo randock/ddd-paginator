@@ -1,0 +1,34 @@
+{
+  "name": "randock/ddd-paginator",
+  "description": "Randock Ddd Paginator Bundle",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Randock\\DddPaginator\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\Randock\\DddPaginator\\": "tests/"
+    }
+  },
+  "config": {
+    "sort-packages": true,
+    "platform": {
+      "php": "7.2"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "php": "^7.2.0",
+    "randock/ddd": "*",
+    "doctrine/orm": "^2.5",
+    "pagerfanta/pagerfanta": "^1.0"
+  },
+  "require-dev": {
+    "randock/build": "dev-symfony4",
+    "symfony/phpunit-bridge": "^4.0"
+  }
+}

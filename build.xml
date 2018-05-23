@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="dddPaginator" default ="validate">
+    <property name="php_version" value="7.2" />
+    <property name="phpqa.config_dir" value="./" />
+
+    <import file="${basedir}/vendor/randock/build/build.base.xml"/>
+</project>
