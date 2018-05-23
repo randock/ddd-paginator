@@ -11,8 +11,8 @@ class PaginationRequestTestClass extends PaginationRequest
     /**
      * PaginationRequestTestClass constructor.
      *
-     * @param array $criteria
-     * @param array $sort
+     * @param array    $criteria
+     * @param array    $sort
      * @param int|null $limit
      * @param int|null $page
      */

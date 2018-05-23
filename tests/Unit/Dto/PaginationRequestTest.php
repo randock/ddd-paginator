@@ -14,14 +14,14 @@ class PaginationRequestTest extends TestCase
     public const PAGINATION_REQUEST_TEST_LIMIT = 500;
 
     public const PAGINATION_REQUEST_TEST_SORT = [
-        'item' => 'ASC'
+        'item' => 'ASC',
     ];
 
     public const PAGINATION_REQUEST_TEST_CRITERIA = [
         'item' => [
             'operator' => 'EQ',
             'value' => 'value',
-        ]
+        ],
     ];
 
     public function testGetters()
@@ -38,8 +38,9 @@ class PaginationRequestTest extends TestCase
     /**
      * @param array|null $criteria
      * @param array|null $sort
-     * @param int|null $limit
-     * @param int|null $page
+     * @param int|null   $limit
+     * @param int|null   $page
+     *
      * @return PaginationRequestTestClass
      */
     public static function newPaginationRequest(array $criteria = null, array $sort = null, int $limit = null, int $page = null): PaginationRequestTestClass
