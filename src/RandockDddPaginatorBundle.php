@@ -1,15 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: juanjose
- * Date: 24/5/18
- * Time: 12:21
- */
+
+declare(strict_types=1);
 
 namespace Randock\DddPaginator;
 
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class RandockDddPaginatorBundle
+class RandockDddPaginatorBundle extends Bundle
 {
-
 }
