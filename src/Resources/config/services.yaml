@@ -1,4 +1,6 @@
 services:
+    Randock\DddPaginator\DataTransformer\DataTransformerInterface:
+        class: Randock\DddPaginator\DataTransformer\DataTransformerInterface
     Randock\DddPaginator\DataTransformer\PaginatedDataTransformer:
         class: Randock\DddPaginator\DataTransformer\PaginatedDataTransformer
         arguments:
