@@ -6,8 +6,10 @@ namespace Randock\DddPaginator\Repository;
 
 use Pagerfanta\Pagerfanta;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\EntityRepository;
 use Pagerfanta\Adapter\ArrayAdapter;
+use Doctrine\ORM\Query\Expr\Comparison;
 use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 
@@ -23,6 +25,8 @@ abstract class PaginatorRepository
     public const OPERATOR_GTE = 'gte';
     public const OPERATOR_LIKE = 'like';
     public const OPERATOR_BETWEEN = 'between';
+    public const OPERATOR_NOT_EQ = 'not_eq';
+    public const OPERATOR_OR = 'or';
 
     public const JOIN_LEFT = 'left';
     public const JOIN_INNER = 'inner';
@@ -87,7 +91,8 @@ abstract class PaginatorRepository
         array $criteria = [],
         array $sorting = [],
         array $joins = []
-    ): Pagerfanta {
+    ): Pagerfanta
+    {
         $this->applyJoins($joins, $queryBuilder);
         $this->applyCriteriaOperator($alias, $queryBuilder, $criteria);
         $this->applySorting($alias, $queryBuilder, $sorting);
@@ -131,52 +136,14 @@ abstract class PaginatorRepository
         string $alias,
         QueryBuilder $queryBuilder,
         array $criteria = []
-    ): QueryBuilder {
-        $position = 0;
-        foreach ($criteria as $name => $expression) {
-            if (null === $expression) {
+    ): QueryBuilder
+    {
+        foreach ($criteria as $name => $criterion) {
+            if (null === $criterion) {
                 continue;
             }
-            $name = $this->getPropertyName($alias, $name);
-            $parameter = ':' . str_replace('.', '_', $name) . $position;
-
-            $operation = $expression['operator'];
-            $parameterValue = $expression['value'];
-
-            switch ($operation) {
-                case static::OPERATOR_GT:
-                    $queryBuilder->andWhere($queryBuilder->expr()->gt($name, $parameter));
-                    break;
-                case static::OPERATOR_LT:
-                    $queryBuilder->andWhere($queryBuilder->expr()->lt($name, $parameter));
-                    break;
-                case static::OPERATOR_GTE:
-                    $queryBuilder->andWhere($queryBuilder->expr()->gte($name, $parameter));
-                    break;
-                case static::OPERATOR_LTE:
-                    $queryBuilder->andWhere($queryBuilder->expr()->lte($name, $parameter));
-                    break;
-                case static::OPERATOR_LIKE:
-                    $queryBuilder->andWhere($queryBuilder->expr()->like($name, $parameter));
-                    $parameterValue = '%' . $parameterValue . '%';
-                    break;
-                case static::OPERATOR_BETWEEN:
-                    $queryBuilder->andWhere($queryBuilder->expr()->between($name, $parameterValue[0], $parameterValue[1]));
-                    break;
-                case static::OPERATOR_EQ:
-
-                default:
-                    if (null === $parameterValue) {
-                        $queryBuilder->andWhere($queryBuilder->expr()->isNull($parameter));
-                    } elseif (is_array($parameterValue)) {
-                        $queryBuilder->andWhere($queryBuilder->expr()->in($name, $parameter));
-                    } elseif ('' !== $parameterValue) {
-                        $queryBuilder->andWhere($queryBuilder->expr()->eq($name, $parameter));
-                    }
-            }
-
-            $queryBuilder->setParameter($parameter, $parameterValue);
-            ++$position;
+            $expression = $this->getExpression($alias, $queryBuilder, $name, $criterion);
+            $queryBuilder->andWhere($expression);
         }
 
         return $queryBuilder;
@@ -230,5 +197,80 @@ abstract class PaginatorRepository
     private function startsWith($haystack, $needle): bool
     {
         return '' === $needle || false !== strrpos($haystack, $needle, -strlen($haystack));
+    }
+
+    /**
+     * @param string       $alias
+     * @param QueryBuilder $queryBuilder
+     * @param string       $name
+     * @param array        $expression
+     *
+     * @return Comparison|Func|QueryBuilder|string
+     */
+    private function getExpression(string $alias, QueryBuilder $queryBuilder, string $name, array $expression)
+    {
+        static $position = 0;
+
+        $name = $this->getPropertyName($alias, $name);
+        $parameter = ':' . str_replace('.', '_', $name) . ++$position;
+
+        $operation = $expression['operator'];
+        $parameterValue = $expression['value'];
+
+        switch ($operation) {
+            case static::OPERATOR_GT:
+                $expression = $queryBuilder->expr()->gt($name, $parameter);
+                break;
+            case static::OPERATOR_LT:
+                $expression = $queryBuilder->expr()->lt($name, $parameter);
+                break;
+            case static::OPERATOR_GTE:
+                $expression = $queryBuilder->expr()->gte($name, $parameter);
+                break;
+            case static::OPERATOR_LTE:
+                $expression = $queryBuilder->expr()->lte($name, $parameter);
+                break;
+            case static::OPERATOR_LIKE:
+                $expression = $queryBuilder->expr()->like($name, $parameter);
+                $parameterValue = '%' . $parameterValue . '%';
+                break;
+            case static::OPERATOR_BETWEEN:
+                $expression = $queryBuilder->expr()->between($name, $parameterValue[0], $parameterValue[1]);
+                break;
+            case static::OPERATOR_OR:
+                $ors = [];
+                foreach ($parameterValue as $orElement => $criteria) {
+                    $ors[] = $this->getExpression(
+                        $alias,
+                        $queryBuilder,
+                        $orElement,
+                        $criteria
+                    );
+                }
+                $expression = $queryBuilder->expr()->orX(...$ors);
+                $parameterValue = null;
+                break;
+            case static::OPERATOR_EQ:
+            case static::OPERATOR_NOT_EQ:
+
+            default:
+                if (null === $parameterValue) {
+                    $expression = $queryBuilder->expr()->isNull($parameter);
+                } elseif (is_array($parameterValue)) {
+                    $expression = $queryBuilder->expr()->in($name, $parameter);
+                } elseif ('' !== $parameterValue) {
+                    $expression = $queryBuilder->expr()->eq($name, $parameter);
+                }
+        }
+
+        if (static::OPERATOR_NOT_EQ === $operation) {
+            $expression = $queryBuilder->expr()->not($expression);
+        }
+
+        if (null !== $parameterValue) {
+            $queryBuilder->setParameter($parameter, $parameterValue);
+        }
+
+        return $expression;
     }
 }
