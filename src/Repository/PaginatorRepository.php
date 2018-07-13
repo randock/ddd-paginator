@@ -91,8 +91,7 @@ abstract class PaginatorRepository
         array $criteria = [],
         array $sorting = [],
         array $joins = []
-    ): Pagerfanta
-    {
+    ): Pagerfanta {
         $this->applyJoins($joins, $queryBuilder);
         $this->applyCriteriaOperator($alias, $queryBuilder, $criteria);
         $this->applySorting($alias, $queryBuilder, $sorting);
@@ -136,8 +135,7 @@ abstract class PaginatorRepository
         string $alias,
         QueryBuilder $queryBuilder,
         array $criteria = []
-    ): QueryBuilder
-    {
+    ): QueryBuilder {
         foreach ($criteria as $name => $criterion) {
             if (null === $criterion) {
                 continue;
