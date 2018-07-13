@@ -6,6 +6,7 @@ namespace Randock\DddPaginator\Repository;
 
 use Pagerfanta\Pagerfanta;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Query\Expr\Orx;
 use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\EntityRepository;
 use Pagerfanta\Adapter\ArrayAdapter;
@@ -201,20 +202,21 @@ abstract class PaginatorRepository
      * @param string       $alias
      * @param QueryBuilder $queryBuilder
      * @param string       $name
-     * @param array        $expression
+     * @param array        $criterion
      *
-     * @return Comparison|Func|QueryBuilder|string
+     * @return Comparison|Func|Orx|string|null
      */
-    private function getExpression(string $alias, QueryBuilder $queryBuilder, string $name, array $expression)
+    private function getExpression(string $alias, QueryBuilder $queryBuilder, string $name, array $criterion)
     {
         static $position = 0;
 
         $name = $this->getPropertyName($alias, $name);
         $parameter = ':' . str_replace('.', '_', $name) . ++$position;
 
-        $operation = $expression['operator'];
-        $parameterValue = $expression['value'];
+        $operation = $criterion['operator'];
+        $parameterValue = $criterion['value'];
 
+        $expression = null;
         switch ($operation) {
             case static::OPERATOR_GT:
                 $expression = $queryBuilder->expr()->gt($name, $parameter);
@@ -237,11 +239,11 @@ abstract class PaginatorRepository
                 break;
             case static::OPERATOR_OR:
                 $ors = [];
-                foreach ($parameterValue as $orElement => $criteria) {
+                foreach ($parameterValue as $criteria) {
                     $ors[] = $this->getExpression(
                         $alias,
                         $queryBuilder,
-                        $orElement,
+                        $criteria['field'],
                         $criteria
                     );
                 }
