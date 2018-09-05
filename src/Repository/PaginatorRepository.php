@@ -184,7 +184,7 @@ abstract class PaginatorRepository
      */
     private function getPropertyName(string $alias, string $name): string
     {
-        return (false === strpos($name, '.') && false === $this->startsWith($name, $alias)) ? $alias . '.' . $name : $name;
+        return false === $this->startsWith($name, $alias) ? $alias . '.' . $name : $name;
     }
 
     /**
