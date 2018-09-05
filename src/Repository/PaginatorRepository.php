@@ -195,7 +195,7 @@ abstract class PaginatorRepository
      */
     private function startsWith($haystack, $needle): bool
     {
-        return '' === $needle || $needle.'.' === substr($haystack, 0, 2);
+        return '' === $needle || $needle . '.' === substr($haystack, 0, 2);
     }
 
     /**
