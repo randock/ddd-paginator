@@ -195,7 +195,7 @@ abstract class PaginatorRepository
      */
     private function startsWith($haystack, $needle): bool
     {
-        return '' === $needle || false !== strrpos($haystack, $needle, -strlen($haystack));
+        return '' === $needle || false !== strpos($haystack, $needle.'.');
     }
 
     /**
