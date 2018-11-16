@@ -78,7 +78,7 @@ trait PagerfantaTestTrait
         $this->pagerfanta()
             ->shouldReceive('setMaxPerPage')
             ->withArgs(function ($argument) {
-                if (is_int($argument)) {
+                if (\is_int($argument)) {
                     return true;
                 }
 
@@ -91,7 +91,7 @@ trait PagerfantaTestTrait
         $this->pagerfanta()
             ->shouldReceive('setCurrentPage')
             ->withArgs(function ($argument) {
-                if (is_int($argument)) {
+                if (\is_int($argument)) {
                     return true;
                 }
 

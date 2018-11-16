@@ -184,7 +184,7 @@ abstract class PaginatorRepository
      */
     private function getPropertyName(string $alias, string $name): string
     {
-        return false === $this->startsWith($name, $alias) ? $alias . '.' . $name : $name;
+        return (false === strpos($name, '.') && false === $this->startsWith($name, $alias)) ? $alias . '.' . $name : $name;
     }
 
     /**
@@ -195,7 +195,7 @@ abstract class PaginatorRepository
      */
     private function startsWith($haystack, $needle): bool
     {
-        return '' === $needle || $needle . '.' === substr($haystack, 0, 2);
+        return '' === $needle || false !== strrpos($haystack, $needle, -\strlen($haystack));
     }
 
     /**
@@ -256,7 +256,7 @@ abstract class PaginatorRepository
             default:
                 if (null === $parameterValue) {
                     $expression = $queryBuilder->expr()->isNull($parameter);
-                } elseif (is_array($parameterValue)) {
+                } elseif (\is_array($parameterValue)) {
                     $expression = $queryBuilder->expr()->in($name, $parameter);
                 } elseif ('' !== $parameterValue) {
                     $expression = $queryBuilder->expr()->eq($name, $parameter);

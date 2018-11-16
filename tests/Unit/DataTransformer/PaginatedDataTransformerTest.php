@@ -55,6 +55,6 @@ class PaginatedDataTransformerTest extends TestCase
         $this->assertSame(self::PAGINATED_DATA_TRANSFORMER_LIMIT, $paginatedResponse->getLimit());
         $this->assertSame(self::PAGINATED_DATA_TRANSFORMER_NUM_PAGE, $paginatedResponse->getNumPages());
         $this->assertSame(self::PAGINATED_DATA_TRANSFORMER_TOTAL, $paginatedResponse->getTotal());
-        $this->assertSame(gettype([]), gettype($paginatedResponse->getItems()));
+        $this->assertSame(\gettype([]), \gettype($paginatedResponse->getItems()));
     }
 }
