@@ -195,7 +195,7 @@ abstract class PaginatorRepository
      */
     private function startsWith($haystack, $needle): bool
     {
-        return '' === $needle || false !== strrpos($haystack, $needle, -strlen($haystack));
+        return '' === $needle || false !== strrpos($haystack, $needle, -\strlen($haystack));
     }
 
     /**
@@ -256,7 +256,7 @@ abstract class PaginatorRepository
             default:
                 if (null === $parameterValue) {
                     $expression = $queryBuilder->expr()->isNull($parameter);
-                } elseif (is_array($parameterValue)) {
+                } elseif (\is_array($parameterValue)) {
                     $expression = $queryBuilder->expr()->in($name, $parameter);
                 } elseif ('' !== $parameterValue) {
                     $expression = $queryBuilder->expr()->eq($name, $parameter);
