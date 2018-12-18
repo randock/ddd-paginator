@@ -65,13 +65,7 @@ abstract class PaginatorRepository
     {
         $queryBuilder = $this->repository->createQueryBuilder($alias);
 
-        return $this->createOperatorPaginator(
-            $queryBuilder,
-            $alias,
-            $criteria,
-            $sort,
-            $joins
-        );
+        return $this->createOperatorPaginator($queryBuilder, $alias, $criteria, $sort, $joins);
     }
 
     /**
@@ -81,9 +75,7 @@ abstract class PaginatorRepository
      */
     protected function getArrayPaginator(array $objects): Pagerfanta
     {
-        return new Pagerfanta(
-            new ArrayAdapter($objects)
-        );
+        return new Pagerfanta(new ArrayAdapter($objects));
     }
 
     /**
@@ -168,15 +160,7 @@ abstract class PaginatorRepository
     {
         foreach ($sorting as $property => $order) {
             if (!empty($order)) {
-                $orderBy = $this->getPropertyName(
-                    $alias,
-                    $property
-                );
-
-                $queryBuilder->addOrderBy(
-                    $orderBy,
-                    $order
-                );
+                $queryBuilder->addOrderBy($this->getPropertyName($alias, $property), $order);
             }
         }
 
@@ -190,13 +174,7 @@ abstract class PaginatorRepository
      */
     private function getPaginator(QueryBuilder $queryBuilder): Pagerfanta
     {
-        return new Pagerfanta(
-            new DoctrineORMAdapter(
-                $queryBuilder,
-                true,
-                false
-            )
-        );
+        return new Pagerfanta(new DoctrineORMAdapter($queryBuilder, true, false));
     }
 
     /**
@@ -255,11 +233,7 @@ abstract class PaginatorRepository
         static $position = 0;
 
         $name = $this->getPropertyName($alias, $name);
-        $parameter = sprintf(
-            ':%s%d',
-            str_replace('.', '_', $name),
-            ++$position
-        );
+        $parameter = ':' . str_replace('.', '_', $name) . ++$position;
 
         $operation = $criterion['operator'];
         $parameterValue = $criterion['value'];
