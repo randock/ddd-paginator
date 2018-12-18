@@ -105,8 +105,6 @@ abstract class PaginatorRepository
         $this->applyCriteriaOperator($alias, $queryBuilder, $criteria);
         $this->applySorting($alias, $queryBuilder, $sorting);
 
-        $sql = $queryBuilder->__toString();
-
         return $this->getPaginator($queryBuilder);
     }
 
@@ -322,8 +320,6 @@ abstract class PaginatorRepository
         if (null !== $parameterValue) {
             $queryBuilder->setParameter($parameter, $parameterValue);
         }
-
-        $pee = $expression->__toString();
 
         return $expression;
     }
