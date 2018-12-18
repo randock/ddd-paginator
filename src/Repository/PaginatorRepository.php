@@ -210,7 +210,7 @@ abstract class PaginatorRepository
     {
         return '' === $needle || \preg_match(
                 \sprintf(
-                    "/^(%s\.)/ui",
+                    "/^(%s\.)/u",
                     \preg_quote(
                         $needle,
                         '/'
