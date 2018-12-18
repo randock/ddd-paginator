@@ -7,6 +7,7 @@ namespace Randock\DddPaginator\Repository;
 use Pagerfanta\Pagerfanta;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query\Expr\Orx;
+use Doctrine\ORM\Query\Expr\Andx;
 use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\EntityRepository;
 use Pagerfanta\Adapter\ArrayAdapter;
@@ -182,9 +183,21 @@ abstract class PaginatorRepository
      *
      * @return string
      */
-    private function getPropertyName(string $alias, string $name): string
-    {
-        return (false === strpos($name, '.') && false === $this->startsWith($name, $alias)) ? $alias . '.' . $name : $name;
+    private function getPropertyName(
+        string $alias,
+        string $name
+    ): string {
+        $alias = self::extractAliasFromFieldName($name, $alias);
+        $aa = $this->startsWith($name, $alias);
+        if (false === $aa) {
+            return sprintf(
+                '%s.%s',
+                $alias,
+                $name
+            );
+        }
+
+        return $name;
     }
 
     /**
@@ -195,7 +208,16 @@ abstract class PaginatorRepository
      */
     private function startsWith($haystack, $needle): bool
     {
-        return '' === $needle || false !== strrpos($haystack, $needle, -\strlen($haystack));
+        return '' === $needle || \preg_match(
+                \sprintf(
+                    "/^(%s\.)/u",
+                    \preg_quote(
+                        $needle,
+                        '/'
+                    )
+                ),
+                $haystack
+            );
     }
 
     /**
@@ -204,7 +226,7 @@ abstract class PaginatorRepository
      * @param string       $name
      * @param array        $criterion
      *
-     * @return Comparison|Func|Orx|string|null
+     * @return Comparison|Func|Orx|string|Comparison|Andx|null
      */
     private function getExpression(string $alias, QueryBuilder $queryBuilder, string $name, array $criterion)
     {
@@ -247,7 +269,10 @@ abstract class PaginatorRepository
                         $criteria
                     );
                 }
-                $expression = $queryBuilder->expr()->orX(...$ors);
+                $expression = $queryBuilder->expr()->andX(
+                    $queryBuilder->expr()->orX(...$ors)
+                );
+
                 $parameterValue = null;
                 break;
             case static::OPERATOR_EQ:
@@ -272,5 +297,23 @@ abstract class PaginatorRepository
         }
 
         return $expression;
+    }
+
+    /**
+     * @param string $fieldName
+     * @param string $parentAlias
+     *
+     * @return string
+     */
+    private static function extractAliasFromFieldName(
+        string $fieldName,
+        string $parentAlias
+    ): string {
+        $parts = \explode('.', $fieldName);
+        if (2 === \count($parts) && !empty($parts[0])) {
+            return $parts[0];
+        }
+
+        return $parentAlias;
     }
 }
