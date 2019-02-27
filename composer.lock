@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fe9e118a61b0efd40afac6ff06a21390",
+    "content-hash": "f6f45823b32657abeb1cfe5b80b8ac7e",
     "packages": [
         {
             "name": "bornfreee/tactician-domain-events",
@@ -584,12 +584,12 @@
             "version": "v2.6.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/doctrine/doctrine2.git",
+                "url": "https://github.com/doctrine/orm.git",
                 "reference": "87ee409783a4a322b5597ebaae558661404055a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/87ee409783a4a322b5597ebaae558661404055a7",
+                "url": "https://api.github.com/repos/doctrine/orm/zipball/87ee409783a4a322b5597ebaae558661404055a7",
                 "reference": "87ee409783a4a322b5597ebaae558661404055a7",
                 "shasum": ""
             },
@@ -2216,12 +2216,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/randock/build.git",
-                "reference": "1e17a13b7cfbb76128726b4e56978b64f90323d6"
+                "reference": "c1c4e3ba365ce57a6df797558e702839692f4b7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/randock/build/zipball/1e17a13b7cfbb76128726b4e56978b64f90323d6",
-                "reference": "1e17a13b7cfbb76128726b4e56978b64f90323d6",
+                "url": "https://api.github.com/repos/randock/build/zipball/c1c4e3ba365ce57a6df797558e702839692f4b7d",
+                "reference": "c1c4e3ba365ce57a6df797558e702839692f4b7d",
                 "shasum": ""
             },
             "type": "library",
@@ -2230,7 +2230,7 @@
                 "MIT"
             ],
             "description": "Randock Build",
-            "time": "2018-03-31T22:21:53+00:00"
+            "time": "2019-02-20T14:20:43+00:00"
         },
         {
             "name": "symfony/phpunit-bridge",

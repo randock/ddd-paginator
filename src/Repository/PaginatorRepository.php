@@ -191,7 +191,7 @@ abstract class PaginatorRepository
         $alias = self::extractAliasFromFieldName($name, $alias);
         $aa = $this->startsWith($name, $alias);
         if (false === $aa) {
-            return sprintf(
+            return \sprintf(
                 '%s.%s',
                 $alias,
                 $name
@@ -234,7 +234,7 @@ abstract class PaginatorRepository
         static $position = 0;
 
         $name = $this->getPropertyName($alias, $name);
-        $parameter = ':' . str_replace('.', '_', $name) . ++$position;
+        $parameter = ':' . \str_replace('.', '_', $name) . ++$position;
 
         $operation = $criterion['operator'];
         $parameterValue = $criterion['value'];
