@@ -29,6 +29,7 @@ abstract class PaginatorRepository
     public const OPERATOR_BETWEEN = 'between';
     public const OPERATOR_NOT_EQ = 'not_eq';
     public const OPERATOR_OR = 'or';
+    public const OPERATOR_IN = 'in';
 
     public const JOIN_LEFT = 'left';
     public const JOIN_INNER = 'inner';
@@ -277,6 +278,7 @@ abstract class PaginatorRepository
                 break;
             case static::OPERATOR_EQ:
             case static::OPERATOR_NOT_EQ:
+            case static::OPERATOR_IN:
 
             default:
                 if (null === $parameterValue) {
