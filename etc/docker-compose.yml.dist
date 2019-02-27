@@ -2,6 +2,8 @@ version: '2'
 services:
   fpm:
     build: etc/docker/development/fpm
+    environment:
+      - SYMFONY_PHPUNIT_VERSION=6.5.0
     volumes:
       - $PWD:/app
     working_dir: /app
