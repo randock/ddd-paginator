@@ -29,6 +29,7 @@ abstract class PaginatorRepository
     public const OPERATOR_BETWEEN = 'between';
     public const OPERATOR_NOT_EQ = 'not_eq';
     public const OPERATOR_OR = 'or';
+    public const OPERATOR_IN = 'in';
 
     public const JOIN_LEFT = 'left';
     public const JOIN_INNER = 'inner';
@@ -190,7 +191,7 @@ abstract class PaginatorRepository
         $alias = self::extractAliasFromFieldName($name, $alias);
         $aa = $this->startsWith($name, $alias);
         if (false === $aa) {
-            return sprintf(
+            return \sprintf(
                 '%s.%s',
                 $alias,
                 $name
@@ -233,7 +234,7 @@ abstract class PaginatorRepository
         static $position = 0;
 
         $name = $this->getPropertyName($alias, $name);
-        $parameter = ':' . str_replace('.', '_', $name) . ++$position;
+        $parameter = ':' . \str_replace('.', '_', $name) . ++$position;
 
         $operation = $criterion['operator'];
         $parameterValue = $criterion['value'];
@@ -277,6 +278,7 @@ abstract class PaginatorRepository
                 break;
             case static::OPERATOR_EQ:
             case static::OPERATOR_NOT_EQ:
+            case static::OPERATOR_IN:
 
             default:
                 if (null === $parameterValue) {
