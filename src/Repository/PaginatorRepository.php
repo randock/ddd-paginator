@@ -282,7 +282,7 @@ abstract class PaginatorRepository
 
             default:
                 if (null === $parameterValue) {
-                    $expression = $queryBuilder->expr()->isNull($parameter);
+                    $expression = $queryBuilder->expr()->isNull($name);
                 } elseif (\is_array($parameterValue)) {
                     $expression = $queryBuilder->expr()->in($name, $parameter);
                 } elseif ('' !== $parameterValue) {
