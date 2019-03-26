@@ -45,6 +45,11 @@ abstract class PaginatorRepository
     protected $repository;
 
     /**
+     * @var array
+     */
+    protected $aliasJoins;
+
+    /**
      * PaginatorRepository constructor.
      *
      * @param EntityManagerInterface $entityManager
@@ -52,6 +57,14 @@ abstract class PaginatorRepository
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAliasJoins(): array
+    {
+        return $this->aliasJoins;
     }
 
     /**
@@ -65,6 +78,7 @@ abstract class PaginatorRepository
     protected function pagination(string $alias = 'o', array $criteria = [], array $sort = [], array $joins = []): Pagerfanta
     {
         $queryBuilder = $this->repository->createQueryBuilder($alias);
+        $this->aliasJoins = self::extractAliasJoins($joins);
 
         return $this->createOperatorPaginator($queryBuilder, $alias, $criteria, $sort, $joins);
     }
@@ -188,7 +202,7 @@ abstract class PaginatorRepository
         string $alias,
         string $name
     ): string {
-        $alias = self::extractAliasFromFieldName($name, $alias);
+        $alias = self::extractAliasFromFieldName($name, $alias, $this->aliasJoins);
         $aa = $this->startsWith($name, $alias);
         if (false === $aa) {
             return \sprintf(
@@ -304,18 +318,38 @@ abstract class PaginatorRepository
     /**
      * @param string $fieldName
      * @param string $parentAlias
+     * @param array  $aliasJoins
      *
      * @return string
      */
     private static function extractAliasFromFieldName(
         string $fieldName,
-        string $parentAlias
+        string $parentAlias,
+        array $aliasJoins
     ): string {
         $parts = \explode('.', $fieldName);
-        if (2 === \count($parts) && !empty($parts[0])) {
+        if (2 === \count($parts) &&
+            !empty($parts[0]) &&
+            \in_array($parts[0], $aliasJoins)) {
             return $parts[0];
         }
 
         return $parentAlias;
+    }
+
+    /**
+     * @param array $joins
+     *
+     * @return array
+     */
+    private static function extractAliasJoins(array $joins): array
+    {
+        $aliasJoins = [];
+        $valueJoins = \array_values($joins);
+        foreach ($valueJoins as $field => $alias) {
+            $aliasJoins = \array_merge($aliasJoins, $alias);
+        }
+
+        return $aliasJoins;
     }
 }
