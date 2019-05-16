@@ -27,22 +27,27 @@ $criteria = [
 Criteria array structure example (OR):
 ````
 $criteria = [
-    'alias?.field_name' => [
-        'operator' => 'or',
-        'value' => [
-            [
-                'field' => 'field_name',
-                'operator' => 'eq',
-                'value' => 'value_1'
-            ],
-            [
-                'field' => 'field_name',
-                'operator' => 'eq',
-                'value' => 'value_2'
-            ],
-            ...
-        ],
-    ],
-    ...
+  'C' => [
+    'operator' => 'and',
+    'value' => true
+  ],
+  'loquesea' => [
+    'operator' => 'or',
+    'value' => [
+      [
+        'operator' => 'like',
+        'field' => 'A',
+        'value' => 'aaaa'
+      ],
+      [
+        'operator' => 'like',
+        'field' => 'B',
+        'value' => 'bbbb'
+      ]
+    ]
+  ]
 ];
+
+// Output (DQL): 
+// SELECT * FROM table_name WHERE C = true AND (A LIKE 'aaaa' OR B LIKE 'bbbb')
 ````
