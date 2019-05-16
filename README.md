@@ -2,41 +2,47 @@
 Paginator based on pagerfanta
 
 Basic criteria array structure example:
-
+````
 $criteria = [
-  'field' => [
-      'operator' => '',
-      'value' => ''
+  'field' => 'field_name'
+  'operator' => 'and|or|eq|...',
+  'value' => 'value_1'
 ];
+````
 
 Criteria array structure example (between):
-
+````
 $criteria = [
   'field' => [
       'operator' => 'between',
       'value' => [
-          'value1',
-          'value2',
+          'value_1',
+          'value_2',
       ],
   ],
+  ...
 ];
+````
 
 Criteria array structure example (OR):
-
+````
 $criteria = [
-            'name' => [
-                'operator' => 'or',
-                'value' => [
-                    [
-                        'field' => 'name',
-                        'operator' => 'eq',
-                        'value' => 'A'
-                    ],
-                    [
-                        'field' => 'surname',
-                        'operator' => 'eq',
-                        'value' => 'B'
-                    ]
-                ]
-            ]
-        ];
+    'alias?.field_name' => [
+        'operator' => 'or',
+        'value' => [
+            [
+                'field' => 'field_name',
+                'operator' => 'eq',
+                'value' => 'value_1'
+            ],
+            [
+                'field' => 'field_name',
+                'operator' => 'eq',
+                'value' => 'value_2'
+            ],
+            ...
+        ],
+    ],
+    ...
+];
+````
