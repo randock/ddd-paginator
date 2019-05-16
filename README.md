@@ -31,7 +31,7 @@ $criteria = [
     'operator' => 'and',
     'value' => true
   ],
-  'loquesea' => [
+  'random_key' => [
     'operator' => 'or',
     'value' => [
       [
