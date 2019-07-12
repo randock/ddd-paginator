@@ -272,7 +272,7 @@ abstract class PaginatorRepository
                 $parameterValue = '%' . $parameterValue . '%';
                 break;
             case static::OPERATOR_BETWEEN:
-                $expression = $queryBuilder->expr()->between($name, $parameter.'_0', $parameter.'_1');
+                $expression = $queryBuilder->expr()->between($name, $parameter . '_0', $parameter . '_1');
                 break;
             case static::OPERATOR_OR:
                 $ors = [];
