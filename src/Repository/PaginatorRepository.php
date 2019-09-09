@@ -26,10 +26,12 @@ abstract class PaginatorRepository
     public const OPERATOR_LTE = 'lte';
     public const OPERATOR_GTE = 'gte';
     public const OPERATOR_LIKE = 'like';
+    public const OPERATOR_NOT_LIKE = 'not_like';
     public const OPERATOR_BETWEEN = 'between';
     public const OPERATOR_NOT_EQ = 'not_eq';
     public const OPERATOR_OR = 'or';
     public const OPERATOR_IN = 'in';
+    public const OPERATOR_NOT_IN = 'not_in';
 
     public const JOIN_LEFT = 'left';
     public const JOIN_INNER = 'inner';
@@ -157,7 +159,9 @@ abstract class PaginatorRepository
             if (null === $criterion) {
                 continue;
             }
-            $expression = $this->getExpression($alias, $queryBuilder, $name, $criterion);
+
+            $fieldName = $criterion['field'] ?? $name;
+            $expression = $this->getExpression($alias, $queryBuilder, $fieldName, $criterion);
             $queryBuilder->andWhere($expression);
         }
 
@@ -271,13 +275,17 @@ abstract class PaginatorRepository
                 $expression = $queryBuilder->expr()->like($name, $parameter);
                 $parameterValue = '%' . $parameterValue . '%';
                 break;
+            case static::OPERATOR_NOT_LIKE:
+                $expression = $queryBuilder->expr()->notLike($name, $parameter);
+                $parameterValue = '%' . $parameterValue . '%';
+                break;
             case static::OPERATOR_BETWEEN:
                 $expression = $queryBuilder->expr()->between($name, $parameter . '_0', $parameter . '_1');
                 break;
             case static::OPERATOR_OR:
-                $ors = [];
+                $orExpressions = [];
                 foreach ($parameterValue as $criteria) {
-                    $ors[] = $this->getExpression(
+                    $orExpressions[] = $this->getExpression(
                         $alias,
                         $queryBuilder,
                         $criteria['field'],
@@ -285,15 +293,17 @@ abstract class PaginatorRepository
                     );
                 }
                 $expression = $queryBuilder->expr()->andX(
-                    $queryBuilder->expr()->orX(...$ors)
+                    $queryBuilder->expr()->orX(...$orExpressions)
                 );
 
                 $parameterValue = null;
                 break;
+            case static::OPERATOR_NOT_IN:
+                $expression = $queryBuilder->expr()->notIn($name, $parameter);
+                break;
             case static::OPERATOR_EQ:
             case static::OPERATOR_NOT_EQ:
             case static::OPERATOR_IN:
-
             default:
                 if (null === $parameterValue) {
                     $expression = $queryBuilder->expr()->isNull($name);
