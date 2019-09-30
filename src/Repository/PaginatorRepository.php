@@ -206,14 +206,16 @@ abstract class PaginatorRepository
         string $alias,
         string $name
     ): string {
-        $alias = self::extractAliasFromFieldName($name, $alias, $this->aliasJoins);
-        $aa = $this->startsWith($name, $alias);
-        if (false === $aa) {
-            return \sprintf(
-                '%s.%s',
-                $alias,
-                $name
-            );
+        if (0 === \preg_match("/(([a-z0-9]+)\(([^\(\)]+)\))/ui", $name)) {
+            $alias = self::extractAliasFromFieldName($name, $alias, $this->aliasJoins);
+            $startsWith = $this->startsWith($name, $alias);
+            if (false === $startsWith) {
+                return \sprintf(
+                    '%s.%s',
+                    $alias,
+                    $name
+                );
+            }
         }
 
         return $name;
@@ -252,7 +254,7 @@ abstract class PaginatorRepository
         static $position = 0;
 
         $name = $this->getPropertyName($alias, $name);
-        $parameter = ':' . \str_replace('.', '_', $name) . ++$position;
+        $parameter = ':' . \str_replace(['.', '(', ')'], '_', $name) . ++$position;
 
         $operation = $criterion['operator'];
         $parameterValue = $criterion['value'];
