@@ -208,8 +208,8 @@ abstract class PaginatorRepository
     ): string {
         if (0 === \preg_match("/(([a-z0-9]+)\(([^\(\)]+)\))/ui", $name)) {
             $alias = self::extractAliasFromFieldName($name, $alias, $this->aliasJoins);
-            $aa = $this->startsWith($name, $alias);
-            if (false === $aa) {
+            $startsWith = $this->startsWith($name, $alias);
+            if (false === $startsWith) {
                 return \sprintf(
                     '%s.%s',
                     $alias,
