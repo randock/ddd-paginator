@@ -32,6 +32,9 @@ abstract class PaginatorRepository
     public const OPERATOR_OR = 'or';
     public const OPERATOR_IN = 'in';
     public const OPERATOR_NOT_IN = 'not_in';
+    public const OPERATOR_IS_NULL = 'is_null';
+    public const OPERATOR_IS_NOT_NULL = 'is_not_null';
+
 
     public const JOIN_LEFT = 'left';
     public const JOIN_INNER = 'inner';
@@ -258,6 +261,7 @@ abstract class PaginatorRepository
 
         $operation = $criterion['operator'];
         $parameterValue = $criterion['value'];
+        $type = $criterion['type'] ?? null;
 
         $expression = null;
         switch ($operation) {
@@ -303,6 +307,12 @@ abstract class PaginatorRepository
             case static::OPERATOR_NOT_IN:
                 $expression = $queryBuilder->expr()->notIn($name, $parameter);
                 break;
+            case static::OPERATOR_IS_NULL:
+                $expression = $queryBuilder->expr()->isNull($name);
+                break;
+            case static::OPERATOR_IS_NOT_NULL:
+                $expression = $queryBuilder->expr()->isNotNull($name);
+                break;
             case static::OPERATOR_EQ:
             case static::OPERATOR_NOT_EQ:
             case static::OPERATOR_IN:
@@ -325,7 +335,7 @@ abstract class PaginatorRepository
                 $queryBuilder->setParameter($parameter . '_0', $parameterValue[0]);
                 $queryBuilder->setParameter($parameter . '_1', $parameterValue[1]);
             } else {
-                $queryBuilder->setParameter($parameter, $parameterValue);
+                $queryBuilder->setParameter($parameter, $parameterValue, $type);
             }
         }
 
