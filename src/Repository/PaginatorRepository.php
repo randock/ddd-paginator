@@ -6,7 +6,6 @@ namespace Randock\DddPaginator\Repository;
 
 use Pagerfanta\Pagerfanta;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Query\Expr\Orx;
 use Doctrine\ORM\Query\Expr\Andx;
 use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\EntityRepository;
@@ -249,7 +248,7 @@ abstract class PaginatorRepository
      * @param string       $name
      * @param array        $criterion
      *
-     * @return Comparison|Func|Orx|string|Comparison|Andx|null
+     * @return Comparison|Func|string|Comparison|Andx|null
      */
     private function getExpression(string $alias, QueryBuilder $queryBuilder, string $name, array $criterion)
     {
