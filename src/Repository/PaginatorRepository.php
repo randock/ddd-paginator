@@ -35,7 +35,6 @@ abstract class PaginatorRepository
     public const OPERATOR_IS_NULL = 'is_null';
     public const OPERATOR_IS_NOT_NULL = 'is_not_null';
 
-
     public const JOIN_LEFT = 'left';
     public const JOIN_INNER = 'inner';
 
