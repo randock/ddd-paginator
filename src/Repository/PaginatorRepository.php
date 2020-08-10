@@ -255,7 +255,15 @@ abstract class PaginatorRepository
         static $position = 0;
 
         $name = $this->getPropertyName($alias, $name);
-        $parameter = ':' . \str_replace(['.', '(', ')'], '_', $name) . ++$position;
+        $parameter = \sprintf(
+            ':%s_%d',
+            \preg_replace(
+                ['/\./u', '/[^a-zA-Z0-9_]/u', '/(_{2,})/u'],
+                ['_', '_', ''],
+                $name
+            ),
+            ++$position
+        );
 
         $operation = $criterion['operator'];
         $parameterValue = $criterion['value'];
