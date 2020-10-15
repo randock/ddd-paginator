@@ -254,7 +254,7 @@ abstract class PaginatorRepository
      * @param string       $name
      * @param array        $criterion
      *
-     * @return Comparison|Func|string|Comparison|Andx|null|Orx
+     * @return Comparison|Func|string|Comparison|Andx|Orx|null
      */
     private function getExpression(string $alias, QueryBuilder $queryBuilder, string $name, array $criterion)
     {
