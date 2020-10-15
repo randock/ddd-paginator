@@ -6,6 +6,7 @@ namespace Randock\DddPaginator\Repository;
 
 use Pagerfanta\Pagerfanta;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Query\Expr\Orx;
 use Doctrine\ORM\Query\Expr\Andx;
 use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\EntityRepository;
@@ -29,6 +30,7 @@ abstract class PaginatorRepository
     public const OPERATOR_BETWEEN = 'between';
     public const OPERATOR_NOT_EQ = 'not_eq';
     public const OPERATOR_OR = 'or';
+    public const OPERATOR_AND = 'and';
     public const OPERATOR_IN = 'in';
     public const OPERATOR_NOT_IN = 'not_in';
     public const OPERATOR_IS_NULL = 'is_null';
@@ -163,7 +165,11 @@ abstract class PaginatorRepository
 
             $fieldName = $criterion['field'] ?? $name;
             $expression = $this->getExpression($alias, $queryBuilder, $fieldName, $criterion);
-            $queryBuilder->andWhere($expression);
+            if ($expression instanceof Orx) {
+                $queryBuilder->orWhere($expression);
+            } else {
+                $queryBuilder->andWhere($expression);
+            }
         }
 
         return $queryBuilder;
@@ -248,7 +254,7 @@ abstract class PaginatorRepository
      * @param string       $name
      * @param array        $criterion
      *
-     * @return Comparison|Func|string|Comparison|Andx|null
+     * @return Comparison|Func|string|Comparison|Andx|Orx|null
      */
     private function getExpression(string $alias, QueryBuilder $queryBuilder, string $name, array $criterion)
     {
@@ -304,9 +310,26 @@ abstract class PaginatorRepository
                         $criteria
                     );
                 }
-                $expression = $queryBuilder->expr()->andX(
-                    $queryBuilder->expr()->orX(...$orExpressions)
-                );
+
+                if (
+                    true === \array_key_exists('inside_operator', $criterion) &&
+                    self::OPERATOR_OR === $criterion['inside_operator']
+                ) {
+                    $expression = $queryBuilder->expr()->orX(
+                        $queryBuilder->expr()->orX(...$orExpressions)
+                    );
+                } elseif (
+                    true === \array_key_exists('inside_operator', $criterion) &&
+                    self::OPERATOR_AND === $criterion['inside_operator']
+                ) {
+                    $expression = $queryBuilder->expr()->orX(
+                        $queryBuilder->expr()->andX(...$orExpressions)
+                    );
+                } else {
+                    $expression = $queryBuilder->expr()->andX(
+                        $queryBuilder->expr()->orX(...$orExpressions)
+                    );
+                }
 
                 $parameterValue = null;
                 break;
