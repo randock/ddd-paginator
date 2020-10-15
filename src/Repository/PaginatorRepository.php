@@ -312,15 +312,15 @@ abstract class PaginatorRepository
                 }
 
                 if (
-                    true === \array_key_exists('in_operator', $criterion) &&
-                    self::OPERATOR_OR === $criterion['in_operator']
+                    true === \array_key_exists('inside_operator', $criterion) &&
+                    self::OPERATOR_OR === $criterion['inside_operator']
                 ) {
                     $expression = $queryBuilder->expr()->orX(
                         $queryBuilder->expr()->orX(...$orExpressions)
                     );
                 } elseif (
-                    true === \array_key_exists('in_operator', $criterion) &&
-                    self::OPERATOR_AND === $criterion['in_operator']
+                    true === \array_key_exists('inside_operator', $criterion) &&
+                    self::OPERATOR_AND === $criterion['inside_operator']
                 ) {
                     $expression = $queryBuilder->expr()->orX(
                         $queryBuilder->expr()->andX(...$orExpressions)
