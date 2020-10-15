@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Randock\DddPaginator\Repository;
 
-use Doctrine\ORM\Query\Expr\Orx;
 use Pagerfanta\Pagerfanta;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Query\Expr\Orx;
 use Doctrine\ORM\Query\Expr\Andx;
 use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\EntityRepository;
@@ -165,7 +165,7 @@ abstract class PaginatorRepository
 
             $fieldName = $criterion['field'] ?? $name;
             $expression = $this->getExpression($alias, $queryBuilder, $fieldName, $criterion);
-            if($expression instanceof Orx) {
+            if ($expression instanceof Orx) {
                 $queryBuilder->orWhere($expression);
             } else {
                 $queryBuilder->andWhere($expression);
@@ -312,20 +312,20 @@ abstract class PaginatorRepository
                 }
 
                 if (
-                    true === array_key_exists('in_operator', $criterion) &&
-                    $criterion['in_operator'] === self::OPERATOR_OR
+                    true === \array_key_exists('in_operator', $criterion) &&
+                    self::OPERATOR_OR === $criterion['in_operator']
                 ) {
                     $expression = $queryBuilder->expr()->orX(
                         $queryBuilder->expr()->orX(...$orExpressions)
                     );
-                }else if (
-                    true === array_key_exists('in_operator', $criterion) &&
-                    $criterion['in_operator'] === self::OPERATOR_AND
+                } elseif (
+                    true === \array_key_exists('in_operator', $criterion) &&
+                    self::OPERATOR_AND === $criterion['in_operator']
                 ) {
                     $expression = $queryBuilder->expr()->orX(
                         $queryBuilder->expr()->andX(...$orExpressions)
                     );
-                }else {
+                } else {
                     $expression = $queryBuilder->expr()->andX(
                         $queryBuilder->expr()->orX(...$orExpressions)
                     );
