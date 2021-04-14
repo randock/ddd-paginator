@@ -7,4 +7,3 @@ parameters:
         - %currentWorkingDirectory%/etc
     ignoreErrors:
         - '#no value type specified in iterable#'
-        - '\does not specify its types: T\'
