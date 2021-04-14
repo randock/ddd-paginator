@@ -5,3 +5,5 @@ parameters:
     excludes_analyse:
         - %currentWorkingDirectory%/vendor
         - %currentWorkingDirectory%/etc
+    ignoreErrors:
+        - '#no value type specified in iterable#'
