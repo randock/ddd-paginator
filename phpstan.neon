@@ -6,8 +6,4 @@ parameters:
         - %currentWorkingDirectory%/vendor
         - %currentWorkingDirectory%/etc
     ignoreErrors:
-<<<<<<< HEAD
         - '#no value type specified in iterable#'
-=======
-        - '#no value type specified in iterable#'
->>>>>>> origin/story/symfony-5-compatibility
