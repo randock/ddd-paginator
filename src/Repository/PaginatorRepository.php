@@ -30,8 +30,11 @@ abstract class PaginatorRepository
     public const OPERATOR_BETWEEN = 'between';
     public const OPERATOR_NOT_EQ = 'not_eq';
     public const OPERATOR_OR = 'or';
+    public const OPERATOR_AND = 'and';
     public const OPERATOR_IN = 'in';
     public const OPERATOR_NOT_IN = 'not_in';
+    public const OPERATOR_IS_NULL = 'is_null';
+    public const OPERATOR_IS_NOT_NULL = 'is_not_null';
 
     public const JOIN_LEFT = 'left';
     public const JOIN_INNER = 'inner';
@@ -162,7 +165,11 @@ abstract class PaginatorRepository
 
             $fieldName = $criterion['field'] ?? $name;
             $expression = $this->getExpression($alias, $queryBuilder, $fieldName, $criterion);
-            $queryBuilder->andWhere($expression);
+            if ($expression instanceof Orx) {
+                $queryBuilder->orWhere($expression);
+            } else {
+                $queryBuilder->andWhere($expression);
+            }
         }
 
         return $queryBuilder;
@@ -247,17 +254,26 @@ abstract class PaginatorRepository
      * @param string       $name
      * @param array        $criterion
      *
-     * @return Comparison|Func|Orx|string|Comparison|Andx|null
+     * @return Comparison|Func|string|Comparison|Andx|Orx|null
      */
     private function getExpression(string $alias, QueryBuilder $queryBuilder, string $name, array $criterion)
     {
         static $position = 0;
 
         $name = $this->getPropertyName($alias, $name);
-        $parameter = ':' . \str_replace(['.', '(', ')'], '_', $name) . ++$position;
+        $parameter = \sprintf(
+            ':%s_%d',
+            \preg_replace(
+                ['/\./u', '/[^a-zA-Z0-9_]/u', '/(_{2,})/u'],
+                ['_', '_', ''],
+                $name
+            ),
+            ++$position
+        );
 
         $operation = $criterion['operator'];
         $parameterValue = $criterion['value'];
+        $type = $criterion['type'] ?? null;
 
         $expression = null;
         switch ($operation) {
@@ -294,14 +310,37 @@ abstract class PaginatorRepository
                         $criteria
                     );
                 }
-                $expression = $queryBuilder->expr()->andX(
-                    $queryBuilder->expr()->orX(...$orExpressions)
-                );
+
+                if (
+                    true === \array_key_exists('inside_operator', $criterion) &&
+                    self::OPERATOR_OR === $criterion['inside_operator']
+                ) {
+                    $expression = $queryBuilder->expr()->orX(
+                        $queryBuilder->expr()->orX(...$orExpressions)
+                    );
+                } elseif (
+                    true === \array_key_exists('inside_operator', $criterion) &&
+                    self::OPERATOR_AND === $criterion['inside_operator']
+                ) {
+                    $expression = $queryBuilder->expr()->orX(
+                        $queryBuilder->expr()->andX(...$orExpressions)
+                    );
+                } else {
+                    $expression = $queryBuilder->expr()->andX(
+                        $queryBuilder->expr()->orX(...$orExpressions)
+                    );
+                }
 
                 $parameterValue = null;
                 break;
             case static::OPERATOR_NOT_IN:
                 $expression = $queryBuilder->expr()->notIn($name, $parameter);
+                break;
+            case static::OPERATOR_IS_NULL:
+                $expression = $queryBuilder->expr()->isNull($name);
+                break;
+            case static::OPERATOR_IS_NOT_NULL:
+                $expression = $queryBuilder->expr()->isNotNull($name);
                 break;
             case static::OPERATOR_EQ:
             case static::OPERATOR_NOT_EQ:
@@ -325,7 +364,7 @@ abstract class PaginatorRepository
                 $queryBuilder->setParameter($parameter . '_0', $parameterValue[0]);
                 $queryBuilder->setParameter($parameter . '_1', $parameterValue[1]);
             } else {
-                $queryBuilder->setParameter($parameter, $parameterValue);
+                $queryBuilder->setParameter($parameter, $parameterValue, $type);
             }
         }
 
