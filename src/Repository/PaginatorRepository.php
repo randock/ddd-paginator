@@ -311,17 +311,12 @@ abstract class PaginatorRepository
                     );
                 }
 
-                if (
-                    true === \array_key_exists('inside_operator', $criterion) &&
-                    self::OPERATOR_OR === $criterion['inside_operator']
-                ) {
+                $hasInsideOperator = true === \array_key_exists('inside_operator', $criterion);
+                if ($hasInsideOperator && self::OPERATOR_OR === $criterion['inside_operator']) {
                     $expression = $queryBuilder->expr()->orX(
                         $queryBuilder->expr()->orX(...$orExpressions)
                     );
-                } elseif (
-                    true === \array_key_exists('inside_operator', $criterion) &&
-                    self::OPERATOR_AND === $criterion['inside_operator']
-                ) {
+                } elseif ($hasInsideOperator && self::OPERATOR_AND === $criterion['inside_operator']) {
                     $expression = $queryBuilder->expr()->orX(
                         $queryBuilder->expr()->andX(...$orExpressions)
                     );
