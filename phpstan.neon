@@ -7,4 +7,4 @@ parameters:
         - %currentWorkingDirectory%/etc
     ignoreErrors:
         - '#no value type specified in iterable#'
-        - '#Property Randock\\DddPaginator\\Repository\\PaginatorRepository::\$repository with generic class Doctrine\\ORM\\EntityRepository does not specify its types: T#'
+        - '#does not specify its types: T#'
