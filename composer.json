@@ -24,13 +24,13 @@
   "require": {
     "php": "^7.2 || ^8.0",
     "randock/ddd": "*",
-    "doctrine/orm": "^2.5|^3.0",
+    "doctrine/orm": "^2.5 || ^3.0",
     "pagerfanta/pagerfanta": "^1.0",
-    "symfony/framework-bundle": "^3.0|^4.0|^5.0"
+    "symfony/framework-bundle": "^3.0 || ^4.0 || ^5.0"
   },
   "require-dev": {
     "randock/build": "dev-symfony4",
-    "symfony/phpunit-bridge": "^4.0|^5.0",
+    "symfony/phpunit-bridge": "^4.0 || ^5.0",
     "mockery/mockery": "^1.0"
   }
 }
