@@ -22,7 +22,7 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "require": {
-    "php": "^7.2 || ^8.0",
+    "php": "^7.2|^8.0",
     "randock/ddd": "*",
     "doctrine/orm": "^2.5|^3.0",
     "pagerfanta/pagerfanta": "^1.0",
