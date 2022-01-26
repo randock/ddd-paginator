@@ -8,3 +8,4 @@ parameters:
     ignoreErrors:
         - '#no value type specified in iterable#'
         - '#does not specify its types: T#'
+        - '#Parameter \#1 \$x of method Doctrine\\ORM\\Query\\Expr::orX\(\) expects array<int, Doctrine\\ORM\\Query\\Expr\\Andx|Doctrine\\ORM\\Query\\Expr\\Comparison|Doctrine\\ORM\\Query\\Expr\\Func|Doctrine\\ORM\\Query\\Expr\\Orx|string>|null, Doctrine\\ORM\\Query\\Expr\\Orx given.#'
