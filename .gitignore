@@ -5,3 +5,4 @@ docker-compose.yml
 phpunit.xml
 /build/
 composer.lock
+.phpunit.result.cache
