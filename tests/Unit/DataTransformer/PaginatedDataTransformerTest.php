@@ -28,13 +28,13 @@ class PaginatedDataTransformerTest extends TestCase
      */
     private $paginatedDataTransformer;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->paginatedDataTransformer = new PaginatedDataTransformer($this->dataTransformerInterface());
     }
 
-    public function testTransform()
+    public function testTransform(): void
     {
         $item['key'] = 'value';
         $items = [
