@@ -1,3 +1,3 @@
-FROM randock/docker-ubuntu-php:7.2-dev
+FROM randock/docker-ubuntu-php:8.2-dev
 
-COPY php-fpm7.2.conf /etc/php/7.2/fpm/php-fpm.conf
+COPY php-fpm8.2.conf /etc/php/8.2/fpm/php-fpm.conf

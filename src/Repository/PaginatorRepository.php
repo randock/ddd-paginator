@@ -13,7 +13,7 @@ use Doctrine\ORM\EntityRepository;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Doctrine\ORM\Query\Expr\Comparison;
 use Doctrine\ORM\EntityManagerInterface;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
 
 /**
  * Class EntityRepository.
@@ -200,7 +200,7 @@ abstract class PaginatorRepository
      */
     private function getPaginator(QueryBuilder $queryBuilder): Pagerfanta
     {
-        return new Pagerfanta(new DoctrineORMAdapter($queryBuilder, true, false));
+        return new Pagerfanta(new QueryAdapter($queryBuilder, true, false));
     }
 
     /**
@@ -237,15 +237,15 @@ abstract class PaginatorRepository
     private function startsWith($haystack, $needle): bool
     {
         return '' === $needle || \preg_match(
-                \sprintf(
-                    "/^(%s\.)/u",
-                    \preg_quote(
-                        $needle,
-                        '/'
-                    )
-                ),
-                $haystack
-            );
+            \sprintf(
+                "/^(%s\.)/u",
+                \preg_quote(
+                    $needle,
+                    '/'
+                )
+            ),
+            $haystack
+        );
     }
 
     /**
@@ -312,15 +312,15 @@ abstract class PaginatorRepository
                 }
 
                 if (
-                    true === \array_key_exists('inside_operator', $criterion) &&
-                    self::OPERATOR_OR === $criterion['inside_operator']
+                    true === \array_key_exists('inside_operator', $criterion)
+                    && self::OPERATOR_OR === $criterion['inside_operator']
                 ) {
                     $expression = $queryBuilder->expr()->orX(
                         $queryBuilder->expr()->orX(...$orExpressions)
                     );
                 } elseif (
-                    true === \array_key_exists('inside_operator', $criterion) &&
-                    self::OPERATOR_AND === $criterion['inside_operator']
+                    true === \array_key_exists('inside_operator', $criterion)
+                    && self::OPERATOR_AND === $criterion['inside_operator']
                 ) {
                     $expression = $queryBuilder->expr()->orX(
                         $queryBuilder->expr()->andX(...$orExpressions)
@@ -384,9 +384,9 @@ abstract class PaginatorRepository
         array $aliasJoins
     ): string {
         $parts = \explode('.', $fieldName);
-        if (2 === \count($parts) &&
-            !empty($parts[0]) &&
-            \in_array($parts[0], $aliasJoins)) {
+        if (2 === \count($parts)
+            && !empty($parts[0])
+            && \in_array($parts[0], $aliasJoins)) {
             return $parts[0];
         }
 

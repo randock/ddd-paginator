@@ -37,7 +37,7 @@ abstract class PaginationRequest
      * @param int|null $limit
      * @param int|null $page
      */
-    public function __construct(array $criteria = [], array $sort = [], int $limit = null, int $page = null)
+    public function __construct(array $criteria = [], array $sort = [], ?int $limit = null, ?int $page = null)
     {
         $this->criteria = $criteria;
         $this->sort = $sort;

@@ -43,7 +43,7 @@ class PaginationRequestTest extends TestCase
      *
      * @return PaginationRequestTestClass
      */
-    public static function newPaginationRequest(array $criteria = null, array $sort = null, int $limit = null, int $page = null): PaginationRequestTestClass
+    public static function newPaginationRequest(?array $criteria = null, ?array $sort = null, ?int $limit = null, ?int $page = null): PaginationRequestTestClass
     {
         return new PaginationRequestTestClass(
             $criteria ?? self::PAGINATION_REQUEST_TEST_CRITERIA,

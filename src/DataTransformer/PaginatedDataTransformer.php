@@ -27,6 +27,7 @@ class PaginatedDataTransformer
     public function transform(Pagerfanta $pager): PaginatedResponse
     {
         $items = [];
+        /** @var object $item */
         foreach ($pager->getCurrentPageResults() as $item) {
             $items[] = $this->dataTransformer->transform($item);
         }

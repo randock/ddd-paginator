@@ -40,7 +40,7 @@ class PaginatedResponseTest extends TestCase
      *
      * @return PaginatedResponse
      */
-    public static function newPaginatedResponse(int $page = null, int $limit = null, int $numPages = null, int $total = null, array $items = null): PaginatedResponse
+    public static function newPaginatedResponse(?int $page = null, ?int $limit = null, ?int $numPages = null, ?int $total = null, ?array $items = null): PaginatedResponse
     {
         return new PaginatedResponse(
             $page ?? self::PAGINATED_RESPONSE_TEST_PAGE,
